@@ -5,7 +5,6 @@ namespace ExpenseTrackerAPI.Database;
 
 public class ApplicationDbSeed
 {
-
     public static async Task SeedAsync(UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager)
     {
         await roleManager.CreateAsync(new IdentityRole(AuthConstants.Roles.Admin.ToString()));
@@ -15,10 +14,21 @@ public class ApplicationDbSeed
 
         if (userManager.Users.All(u => u.Email != AuthConstants.defaultEmail))
         {
-            var result = await userManager.CreateAsync(defaultUser, AuthConstants.defaultPassword);
-            if (result.Succeeded)
+            try
             {
-                await userManager.AddToRoleAsync(defaultUser, AuthConstants.Roles.Admin.ToString());
+                var isUserCreated = await userManager.CreateAsync(defaultUser, AuthConstants.defaultPassword);
+                if (isUserCreated.Succeeded)
+                {
+                    await userManager.AddToRoleAsync(defaultUser, AuthConstants.Roles.Admin.ToString());
+                }
+                else
+                {
+                    throw new Exception(isUserCreated.Errors.FirstOrDefault().Description);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
             }
         }
     }

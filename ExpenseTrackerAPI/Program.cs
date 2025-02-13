@@ -69,7 +69,7 @@ using (var scope = app.Services.CreateScope())
     }
     catch (Exception ex)
     {
-        logger.LogError(ex.Message,"Program.cs :: Error while seeding database");
+        logger.LogError($"Program.cs :: Error while seeding database {ex.Message}");
     }
 }
 
