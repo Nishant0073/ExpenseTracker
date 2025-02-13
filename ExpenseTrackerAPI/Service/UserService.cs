@@ -34,6 +34,31 @@ public class UserService : IUserService
         return "Invalid password";
     }
 
+    public async Task<string> CreateUser(LoginModel loginModel)
+    {
+        IdentityUser? user = await _userManager.FindByEmailAsync(loginModel.email);
+        if (user != null)
+        {
+            return "User with the same email already exists";
+        }
+
+        try
+        {
+            user = new IdentityUser { Email = loginModel.email, UserName = loginModel.email, EmailConfirmed = true };
+            var isUserCreated = await _userManager.CreateAsync(user, loginModel.password);
+            if (isUserCreated.Succeeded)
+            {
+                return "User created successfully";
+            }
+
+            return "User creation failed";
+        }
+        catch (Exception ex)
+        {
+            return ex.Message;
+        }
+    }
+
     private async Task<JwtSecurityToken> CreateJwtToken(IdentityUser user)
     {
         var userClaims = await _userManager.GetClaimsAsync(user);

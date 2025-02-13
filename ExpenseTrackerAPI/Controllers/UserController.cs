@@ -24,4 +24,15 @@ public class UserController: ControllerBase
         }
         return Ok(await _userService.GetToken(loginModel));
     }
+
+    [HttpPost("register")]
+    public async Task<IActionResult> Register([FromBody] LoginModel loginModel)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
+        return Ok(await _userService.CreateUser(loginModel));
+    }
 }
