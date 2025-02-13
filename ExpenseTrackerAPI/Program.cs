@@ -1,4 +1,5 @@
 using System.Text;
+using System.Text.Json.Serialization;
 using ExpenseTrackerAPI.Database;
 using ExpenseTrackerAPI.Service;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -18,6 +19,12 @@ string connectionString = builder.Configuration.GetConnectionString("DefaultConn
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
 
+builder.Services
+    .AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+    });
 
 builder.Services.AddAuthentication(options =>
 {

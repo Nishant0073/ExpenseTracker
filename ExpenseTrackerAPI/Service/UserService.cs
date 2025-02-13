@@ -59,6 +59,23 @@ public class UserService : IUserService
         }
     }
 
+    public async Task<string> AddRole(AddRoleModel addRoleModel)
+    {
+        var user = _userManager.FindByEmailAsync(addRoleModel.email).Result;
+        if(user == null)
+            return "User not found";
+        if (await _userManager.CheckPasswordAsync(user, addRoleModel.password))
+        {
+            var result = await _userManager.AddToRoleAsync(user, addRoleModel.Role.ToString());
+            if (result.Succeeded)
+            {
+                return "Role added successfully";
+            }
+            return $"Role added failed {result.Errors.FirstOrDefault().Description}";
+        }
+        return "Invalid password";
+    }
+
     private async Task<JwtSecurityToken> CreateJwtToken(IdentityUser user)
     {
         var userClaims = await _userManager.GetClaimsAsync(user);

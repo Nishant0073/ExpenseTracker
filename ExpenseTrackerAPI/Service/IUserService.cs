@@ -6,4 +6,5 @@ public interface IUserService
 {
     public Task<string> GetToken(LoginModel loginModel);
     public Task<string> CreateUser(LoginModel loginModel);
+    public Task<string> AddRole(AddRoleModel addRoleModel);
 }

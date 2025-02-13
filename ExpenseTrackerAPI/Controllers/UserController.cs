@@ -35,4 +35,14 @@ public class UserController: ControllerBase
 
         return Ok(await _userService.CreateUser(loginModel));
     }
+
+    [HttpPost("addrole")]
+    public async Task<IActionResult> AddRole([FromBody] AddRoleModel addRoleModel)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+        return Ok(await _userService.AddRole(addRoleModel));
+    }
 }
