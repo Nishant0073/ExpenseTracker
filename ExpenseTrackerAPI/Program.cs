@@ -1,5 +1,6 @@
 using System.Text;
 using ExpenseTrackerAPI.Database;
+using ExpenseTrackerAPI.Service;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
@@ -11,6 +12,7 @@ builder.Services.AddControllers();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>();
+builder.Services.AddScoped<IUserService, UserService>();
 
 string connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
@@ -38,6 +40,7 @@ builder.Services.AddAuthentication(options =>
     };
 
 });
+
 
 var app = builder.Build();
 

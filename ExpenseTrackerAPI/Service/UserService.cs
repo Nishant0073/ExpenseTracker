@@ -7,14 +7,20 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace ExpenseTrackerAPI.Service;
 
-public class UserService(UserManager<IdentityUser> userManager,IConfiguration configuration) : IUserService
+public class UserService : IUserService
 {
-    private UserManager<IdentityUser> _userManager = userManager;
-    private IConfiguration _configuration = configuration;
+    private UserManager<IdentityUser> _userManager;
+    private IConfiguration _configuration;
+
+    public UserService(UserManager<IdentityUser> userManager,IConfiguration configuration)
+    {
+        _userManager = userManager;
+        _configuration = configuration;
+    }
 
     public async Task<string> GetToken(LoginModel loginModel)
     {
-        IdentityUser user =await _userManager.FindByEmailAsync(loginModel.email);
+        IdentityUser? user = await _userManager.FindByEmailAsync(loginModel.email);
         if (user == null)
         {
             return "User not found";

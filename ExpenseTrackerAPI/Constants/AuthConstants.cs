@@ -11,5 +11,5 @@ public class AuthConstants
     public const Roles defaultRole = Roles.User;
     public const string defaultEmail = "user@email.com";
     public const string defaultUsername = "user";
-    public const string defaultPassword = "password";
+    public const string defaultPassword = "Pass@123";
 }

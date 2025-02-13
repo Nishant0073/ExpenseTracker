@@ -1,4 +1,5 @@
 using ExpenseTrackerAPI.Models.User;
+using ExpenseTrackerAPI.Service;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,10 +9,19 @@ namespace ExpenseTrackerAPI.Controllers;
 [Route("[controller]/")]
 public class UserController: ControllerBase
 {
-    [Authorize]
-    [HttpPost("token")]
-    public IActionResult Token([FromBody] LoginModel loginModel)
+    private readonly IUserService _userService;
+
+    public UserController(IUserService userService)
     {
-        return Ok("Test");
+        _userService = userService;
+    }
+    [HttpPost("token")]
+    public async Task<IActionResult> Token([FromBody] LoginModel loginModel)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+        return Ok(await _userService.GetToken(loginModel));
     }
 }
